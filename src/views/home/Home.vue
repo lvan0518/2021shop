@@ -3,19 +3,26 @@
     <navbar class="home-nav">
       <div slot="center">购物街</div>
     </navbar>
-    <home-swiper :banners="bannerList"/>
-    <recommend  :recommends="recommendList"/>
-    <feature-view />
-    <tab-control :titles="titleList"
-                 class="tab-control"
-                 @tabClick="tabClick" />
-    <goods-list :goods="goods[currentType].list"></goods-list>
+    <scroll class="content" ref="scroll" :probe-type="3" @scroll="contentScroll">
+      <home-swiper :banners="bannerList"/>
+      <recommend  :recommends="recommendList"/>
+      <feature-view />
+      <tab-control :titles="titleList"
+                   class="tab-control"
+                   @tabClick="tabClick" />
+      <goods-list :goods="goods[currentType].list"></goods-list>
+    </scroll>
+    <backtop  @click.native="topClick" v-show="btShow"/>
+
   </div>
 </template>
 
 <script>
   import navbar from '../../components/common/navBar/NavBar'
   import TabControl from '../../components/content/tabControl/TabControl'
+  import scroll from '../../components/common/scroll/Scroll'
+  import backtop from '../../components/content/backtop/BackTop'
+
   import GoodsList from '../../components/content/goods/GoodsList'
   import HomeSwiper from './childComps/HomeSwiper'
   import Recommend from './childComps/RecommendView'
@@ -30,7 +37,9 @@
       Recommend,
       FeatureView,
       TabControl,
-      GoodsList
+      GoodsList,
+      scroll,
+      backtop
     },
     data() {
       return {
@@ -42,7 +51,8 @@
           'new':{page:0,list:[]},
           'sell':{page:0,list:[]},
         },
-        currentType:"pop"
+        currentType:"pop",
+        btShow:false
       }
     },
     created() {
@@ -52,6 +62,12 @@
      this.getHomeGoods('sell');
     },
     methods:{
+      contentScroll(pos) {
+        this.btShow = -pos.y >1000
+      },
+      topClick() {
+        this.$refs.scroll.scrollTo(0,0,500);
+      },
       tabClick(index) {
         switch (index) {
           case 0:
@@ -88,6 +104,8 @@
 <style scoped>
   #home {
     padding-top: 44px;
+    height: 100vh;
+    position: relative;
   }
   .home-nav {
     background-color:var(--color-tint);
@@ -102,5 +120,18 @@
     position: sticky;
     top: 44px;
     z-index: 9;
+  }
+  .content {
+    /*height: calc(100% - 93px);*/
+    overflow: hidden;
+    position: absolute;
+    top: 44px;
+    bottom: 49px;
+    left: 0;
+    right: 0;
+    /*margin-top: 44px;*/
+  }
+  .btArrow {
+
   }
 </style>

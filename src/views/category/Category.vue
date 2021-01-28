@@ -116,7 +116,16 @@
       }
     },
     mounted() {
-      this.scroll = new BS(document.querySelector('.wrapper'),{})
+      this.scroll = new BS(document.querySelector('.wrapper'),{
+        propType:3,
+        pullUpLoad:true
+      });
+      this.scroll.on('scroll',(pos) => {
+        console.log(pos);
+      })
+      this.scroll.on('pullingUp',() => {
+        console.log('上拉加载')
+      })
     }
   }
 </script>
