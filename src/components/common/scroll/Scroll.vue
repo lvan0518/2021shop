@@ -16,7 +16,7 @@
                 default() {
                     return 0
                 }
-            }
+            },
         },
         data() {
             return {
@@ -26,7 +26,8 @@
         mounted() {
             this.scrollDev = new bs(this.$refs.scrollDev,{
                 click:true,
-                probeType: this.probeType
+                probeType: this.probeType,
+                pullUpLoad: this.pullUpLoad
             })
             this.scrollDev.on('scroll',(pos) => {
                 // console.log(pos);
@@ -36,6 +37,9 @@
         methods:{
             scrollTo(x,y,time=300) {
                 this.scrollDev.scrollTo(x,y,time);
+            },
+            refresh() {
+                this.scrollDev.refresh();
             }
         }
     }

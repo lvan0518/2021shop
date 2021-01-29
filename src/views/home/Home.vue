@@ -3,7 +3,10 @@
     <navbar class="home-nav">
       <div slot="center">购物街</div>
     </navbar>
-    <scroll class="content" ref="scroll" :probe-type="3" @scroll="contentScroll">
+    <scroll class="content"
+            ref="scroll"
+            :probe-type="3"
+            @scroll="contentScroll">
       <home-swiper :banners="bannerList"/>
       <recommend  :recommends="recommendList"/>
       <feature-view />
@@ -60,6 +63,10 @@
      this.getHomeGoods('pop');
      this.getHomeGoods('new');
      this.getHomeGoods('sell');
+
+    },
+    destroyed(){
+      this.$bus.$off('ItemImgLoad')
     },
     methods:{
       contentScroll(pos) {
@@ -97,6 +104,11 @@
           this.goods[type].list .page+=1;
         })
       }
+    },
+    mounted() {
+      this.$bus.$on('ItemImgLoad',() => {
+        this.$refs.scroll.refresh();
+      })
     }
   }
 </script>
